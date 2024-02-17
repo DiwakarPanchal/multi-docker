@@ -1,9 +1,17 @@
 FROM node:16-alpine as builder
+
 USER node
 RUN mkdir -p /home/node/app
 WORKDIR '/app'
 COPY --chown=node:node ./package.json ./
-RUN npm install 
+
+# Switch to root user temporarily for npm install
+USER root
+RUN npm install
+
+# Switch back to the node user
+USER node
+
 COPY --chown=node:node ./ ./
 RUN npm run build
 
