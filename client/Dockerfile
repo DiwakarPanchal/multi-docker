@@ -1,20 +1,14 @@
 FROM node:16-alpine as builder
 
 USER node
+RUN mkdir -p /home/node/app
 WORKDIR '/app'
 
-# Set permissions for the /app directory
-RUN mkdir -p /app && chown -R node:node /app
-
+# Copy only the package.json first to leverage Docker cache
 COPY --chown=node:node ./package.json ./
-
-# Switch to root user temporarily for npm install
-USER root
 RUN npm install
 
-# Switch back to the node user
-USER node
-
+# Copy the rest of the application
 COPY --chown=node:node ./ ./
 
 # Ensure the 'build' directory is owned by the 'node' user
