@@ -1,8 +1,11 @@
 FROM node:16-alpine as builder
 
 USER node
-RUN mkdir -p /home/node/app
 WORKDIR '/app'
+
+# Set permissions for the /app directory
+RUN mkdir -p /app && chown -R node:node /app
+
 COPY --chown=node:node ./package.json ./
 
 # Switch to root user temporarily for npm install
