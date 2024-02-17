@@ -13,7 +13,13 @@ RUN npm install
 USER node
 
 COPY --chown=node:node ./ ./
+
+# Ensure the 'build' directory is owned by the 'node' user
+RUN mkdir -p /app/build && chown -R node:node /app/build
+
+# Run the build command
 RUN npm run build
+
 
 FROM  nginx
 EXPOSE 3000
